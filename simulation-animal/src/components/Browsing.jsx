@@ -6,8 +6,16 @@ export default class Browsing extends Component{
     constructor(){
         super();
         this.state = {
-
+            animals: []
         }
+    }
+    componentDidMount(){
+        axios.get('/api/getAnimals').then(res => {
+            console.log(res)
+            this.setState({
+                animals: res.data
+            })
+        })
     }
     addToCart(animal){
         var animal = { animal: animal}
@@ -16,10 +24,27 @@ export default class Browsing extends Component{
         })
     }
     render(){
+        let animals = this.state.animals.map((e,i) => {
+            return (
+                <div key={i}>
+                    <h1>{e.animal}</h1>
+                    <h2>{e.detail}</h2>
+                    <h3>{e.feedtime}</h3>
+                    <button onClick={() => this.addToCart(e.animal)}>Adopt Pet</button>
+                </div>
+            )
+        })
         return(
             <div>
                 <Header/>
                 <div className="animals">
+                    <hr/>
+                    <h2>featured animals</h2>
+                    <hr/>
+                    {animals}
+                    <hr/>
+                    <h2>default animals:</h2>
+                    <hr/>
                     <h3>lizard</h3>
                     <button onClick={() => this.addToCart('Lizard')}>Adopt Pet</button>
                     <br/>

@@ -17,37 +17,61 @@ massive(process.env.CONNECTION_STRING).then((db) => {
 })
 
 app.post('/api/register-user', (req, res) => {
-    const { username , password } = req.body
+    const { username, password } = req.body
     const db = app.get('db');
     db.create_user([
         username,
         password
-    ]).then( resp => {
+    ]).then(resp => {
         res.status(200).send('User Registered')
     })
 })
 
-app.post('/api/add-animal', (req,res)=> {
+app.post('/api/add-animal', (req, res) => {
     const { animal } = req.body;
     const db = app.get('db')
-    db.get_user([]).then( resp => {
+    db.get_user([]).then(resp => {
         var id = resp[0].id
-        db.add_animal([animal, id]).then( respo => {
+        db.add_animal([animal, id]).then(respo => {
             res.status(200).send(respo)
         })
     })
 })
 
-app.get('/api/getUsersCart', (req,res) => {
+app.get('/api/getUsersCart', (req, res) => {
     const db = app.get('db');
-    db.get_user([]).then( resp => {
+    db.get_user([]).then(resp => {
         var id = resp[0].id
-        db.get_user_cart([id]).then( respo => {
+        db.get_user_cart([id]).then(respo => {
             res.status(200).send(respo)
         })
     })
 })
 
+app.post('/api/makeOrder', (req, res) => {
+    const db = app.get('db');
+    const { animal, userid, price } = req.body
+    db.make_order([animal, price, userid]).then(resp => {
+        res.status(200).send('added')
+    })
+})
+
+app.get('/api/getUserOrders', (req, res) => {
+    const db = app.get('db');
+    db.get_user([]).then(resp => {
+        var id = resp[0].id
+        db.get_user_orders([id]).then(respo => {
+            res.status(200).send(respo)
+        })
+    })
+})
+
+app.get('/api/getAnimals', (req, res) => {
+    const db = app.get('db');
+    db.get_animal([]).then(resp => {
+        res.status(200).send(resp)
+    })
+})
 
 const { SERVER_PORT } = process.env
 app.listen(SERVER_PORT, () => {

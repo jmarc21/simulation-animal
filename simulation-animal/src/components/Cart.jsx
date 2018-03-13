@@ -16,11 +16,19 @@ export default class Cart extends Component{
             })
         })
     }
+    makeOrder(){
+        var order = this.state.cart[0]
+
+        axios.post('/api/makeOrder', order).then(res => {
+            console.log(res)
+        })
+    }
     render(){
         let mappedCart = this.state.cart.map((e,i) => {
             return(
                 <div key={i}>
-                    <h1>added by {e.username}</h1>
+                    <br/>
+                    <div>added by {e.username}</div>
                     <h1>{e.animal}</h1>
                 </div>
             )
@@ -29,7 +37,7 @@ export default class Cart extends Component{
             <div>
                 <Header/>
                 {mappedCart}
-                <button>Checkout</button>
+                <button onClick={() => this.makeOrder()}>Checkout</button>
             </div>
         )
     }
